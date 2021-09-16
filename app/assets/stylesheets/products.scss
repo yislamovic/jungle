@@ -20,6 +20,16 @@ main section.categories-show {
       margin-top:    20px;
       // margin:        10px;
 
+      .sold-out{
+        position: absolute;
+        top: 0;
+        left: 0;
+        padding: 10px;
+        background-color:rgb(255, 192, 214);
+        border-bottom-right-radius: 20px;
+        font-size: 1.1em;
+      }
+
       header img {
         max-width: 100%;
         max-height: 140px;
