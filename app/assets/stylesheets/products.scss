@@ -83,4 +83,28 @@ main section.products-show {
   }
 }
 
+main section.orders-show {
+  .container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 1em;
+  }
+  .list-order {
+    padding: 1em;
+    border: 1px solid black;
+    border-radius: 10px;
+    max-width: 40%
+  }
+  .products-show{
+     max-width: 260px;
+     max-height: 200px;
+     position:  relative;
+     border:        1px solid #ccc;
+     border-radius: 5px;
+     padding:       15px;
+     margin-top:    20px;
+  }
+}
+
 

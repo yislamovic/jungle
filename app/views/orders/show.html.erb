@@ -6,8 +6,18 @@
 
   <div class="order-summary jumbotron">
     <h4>Thank you for your order!</h4>
+    <h4>Reciept was sent to <%= @order.email %></h4>
   </div>
-
+  <div class="container">
+  <% @order.line_items.each do |line_item|%>
+    <div class="list-order">
+    <p><%=line_item.product.name%></p>
+     <img class='products-show'src='<%=line_item.product.image%>'/> 
+     <p>Price: <%=number_to_currency(line_item.product.price)%></p>
+     <p>Description: <%=line_item.product.description%></p>
+     <p>Qty: <%=line_item.product.quantity%></p>
+     </div>
+    <% end %>
+  </div>
   <%= link_to "Continue Shopping", root_path, class: 'btn btn-lg btn-primary' %>
-
 </section>
