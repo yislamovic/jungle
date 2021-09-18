@@ -1,0 +1,15 @@
+<header class="page-header">
+    <h1>Register &raquo; Sign Up!</h1>
+  </header>
+<div class='well'>
+  
+      <%= form_for :user, url: '/users' do |f| %>
+
+        Email: <%= f.text_field :email %>
+        Password: <%= f.password_field :password %>
+        Password Confirmation: <%= f.password_field :password_confirmation %>
+        <%= f.submit "Submit" %>
+
+        <% end %>
+       
+</div>
