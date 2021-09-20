@@ -1,6 +1,6 @@
 class Product < ActiveRecord::Base
 
-  monetize :price_cents, numericality: true
+  monetize :price_cents, numericality: {greater_than: 0}, allow_nil: false
   mount_uploader :image, ProductImageUploader
 
   belongs_to :category
