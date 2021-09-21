@@ -61,15 +61,15 @@ main section.categories-show {
         font-size: 0.8em;
       }
 
-      &:hover {
+      // &:hover {
 
-        border-color: #999;
+      //   border-color: #999;
 
-        footer {
-          opacity: 1.0;
-        }
+        
+      // }
+      footer {
+        opacity: 1.0;
       }
-
     }
   }
 }
