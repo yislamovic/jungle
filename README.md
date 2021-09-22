@@ -3,10 +3,10 @@
 A mini e-commerce application built with Rails 4.2 for purposes of teaching Rails by example.
 
 # Screen Shots
-!["Shows item checkout."](docs/checkout.png)
-!["Shows all the products."](docs/products.png)
-!["Shows the signup process."](docs/signup.png)
-!["Shows the admin page; add a product!"](docs/admin-products.png)
+!["Shows item checkout."](https://github.com/yislamovic/jungle/blob/master/docs/checkout.png?raw=true)
+!["Shows all the products."](https://github.com/yislamovic/jungle/raw/master/docs/products.png)
+!["Shows the signup process."](https://github.com/yislamovic/jungle/raw/master/docs/signup.png)
+!["Shows the admin page; add a product!"](https://github.com/yislamovic/jungle/raw/master/docs/admin-products.png)
 
 ## Additional Steps for Apple M1 Machines
 
