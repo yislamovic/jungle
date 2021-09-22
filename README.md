@@ -1,6 +1,6 @@
 # Jungle
 
-A mini e-commerce application built with Rails 4.2 for purposes of teaching Rails by example.
+A mini e-commerce application built with Rails 4.2. Was given a rails project with some work done. The finished project includes fixes and new features to the functionality of the e-commerce website.
 
 # Screen Shots
 !["Shows item checkout."](https://github.com/yislamovic/jungle/blob/master/docs/checkout.png?raw=true)
