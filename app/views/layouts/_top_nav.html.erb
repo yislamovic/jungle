@@ -49,10 +49,13 @@
         </li>
         <li>
         <% if current_user %>
-          <%= link_to current_user.email, '/logout'%>
+          <%= link_to current_user.first_name + ' | Logout', '/logout'%>
         <% else %>
           <%= link_to 'Login', '/login' %>
         <% end %>
+        </li>
+        <li>
+          <%= link_to 'Signup', '/signup' %>
         </li>
       </ul>
     </div>

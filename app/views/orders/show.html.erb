@@ -15,9 +15,10 @@
      <img class='products-show'src='<%=line_item.product.image%>'/> 
      <p>Price: <%=number_to_currency(line_item.product.price)%></p>
      <p>Description: <%=line_item.product.description%></p>
-     <p>Qty: <%=line_item.product.quantity%></p>
+     <p>Qty: <%=line_item.quantity%></p>
      </div>
     <% end %>
   </div>
+  <h3>Grand Total: <%= number_to_currency(@order.total_cents / 100.00) %></h3>
   <%= link_to "Continue Shopping", root_path, class: 'btn btn-lg btn-primary' %>
 </section>
