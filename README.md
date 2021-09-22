@@ -2,6 +2,12 @@
 
 A mini e-commerce application built with Rails 4.2 for purposes of teaching Rails by example.
 
+# Screen Shots
+!["Shows item checkout."](docs/checkout.png)
+!["Shows all the products."](docs/products.png)
+!["Shows the signup process."](docs/signup.png)
+!["Shows the admin page; add a product!"](docs/admin-products.png)
+
 ## Additional Steps for Apple M1 Machines
 
 1. Make sure that you are runnning Ruby 2.6.6 (`ruby -v`)
