@@ -1,39 +1,137 @@
 # Jungle
 
-A mini e-commerce application built with Rails 4.2. Was given a rails project with some work done. The finished project includes fixes and new features to the functionality of the e-commerce website.
+A mini e-commerce application built with Rails 6.1 (upgraded from Rails 4.2). This project demonstrates a fully functional online store with product listings, shopping cart, secure checkout, and admin management capabilities.
 
-# Screen Shots
+## ⚡ Recent Updates (2025)
+
+**Major Rails Upgrade Completed:**
+- ✅ Upgraded from Rails 4.2.11 to Rails 6.1.7.10
+- ✅ Upgraded from Ruby 2.6.10 to Ruby 3.1.7
+- ✅ Fixed Apple Silicon (ARM64) compatibility issues
+- ✅ Updated all dependencies for modern compatibility
+- ✅ Fixed CarrierWave image handling for Rails 6.1
+- ✅ Implemented robust error handling and user creation
+- ✅ Added admin authentication system
+
+## 🌟 Features
+
+- **Product Management**: Browse products by category with detailed descriptions and images
+- **Shopping Cart**: Add/remove items with real-time quantity updates
+- **Secure Checkout**: Stripe payment integration with automatic user creation
+- **Admin Panel**: Product management with HTTP Basic authentication
+- **Responsive Design**: Bootstrap-based UI that works on all devices
+- **Image Gallery**: CarrierWave integration with multiple image sizes (thumbnail, tiny, full)
+
+## 📸 Screenshots
 !["Shows item checkout."](https://github.com/yislamovic/jungle/blob/master/docs/checkout.png?raw=true)
 !["Shows all the products."](https://github.com/yislamovic/jungle/raw/master/docs/products.png)
 !["Shows the signup process."](https://github.com/yislamovic/jungle/raw/master/docs/signup.png)
 !["Shows the admin page; add a product!"](https://github.com/yislamovic/jungle/raw/master/docs/admin-products.png)
 
-## Additional Steps for Apple M1 Machines
+## 🚀 Quick Start
 
-1. Make sure that you are runnning Ruby 2.6.6 (`ruby -v`)
-1. Install ImageMagick `brew install imagemagick imagemagick@6 --build-from-source`
-2. Remove Gemfile.lock
-3. Replace Gemfile with version provided [here](https://gist.githubusercontent.com/FrancisBourgouin/831795ae12c4704687a0c2496d91a727/raw/ce8e2104f725f43e56650d404169c7b11c33a5c5/Gemfile)
+### Prerequisites
+- Ruby 3.1.7
+- PostgreSQL
+- ImageMagick (for image processing)
 
-## Setup
+### Installation
 
-1. Run `bundle install` to install dependencies
-2. Create `config/database.yml` by copying `config/database.example.yml`
-3. Create `config/secrets.yml` by copying `config/secrets.example.yml`
-4. Run `bin/rake db:reset` to create, load and seed db
-5. Create .env file based on .env.example
-6. Sign up for a Stripe account
-7. Put Stripe (test) keys into appropriate .env vars
-8. Run `bin/rails s -b 0.0.0.0` to start the server
+1. **Clone and install dependencies:**
+   ```bash
+   git clone <your-repo-url>
+   cd jungle
+   bundle install
+   ```
 
-## Stripe Testing
+2. **Database setup:**
+   ```bash
+   # The database is pre-configured with setup and seed files
+   psql -c "CREATE USER jungle WITH CREATEDB PASSWORD 'password';"
+   psql -U jungle -d postgres -f setup_db.sql
+   psql -U jungle -d jungle_development -f seed_data.sql
+   ```
 
-Use Credit Card # 4111 1111 1111 1111 for testing success scenarios.
+3. **Environment configuration:**
+   ```bash
+   # Copy the .env file (already configured with test credentials)
+   # Update Stripe keys if needed
+   ```
 
-More information in their docs: <https://stripe.com/docs/testing#cards>
+4. **Start the server:**
+   ```bash
+   bin/rails server
+   ```
 
-## Dependencies
+5. **Access the application:**
+   - **Main site**: http://localhost:3000
+   - **Admin panel**: http://localhost:3000/admin/products
+     - Username: `admin`
+     - Password: `junglebook`
 
-* Rails 4.2 [Rails Guide](http://guides.rubyonrails.org/v4.2/)
-* PostgreSQL 9.x
-* Stripe
+## 💳 Stripe Testing
+
+Use these test credit card numbers:
+- **Success**: `4111 1111 1111 1111`
+- **Declined**: `4000 0000 0000 0002`
+
+Any future expiry date and any 3-digit CVC will work with test cards.
+
+More information: [Stripe Testing Documentation](https://stripe.com/docs/testing#cards)
+
+## 🛠️ Technical Details
+
+### Current Technology Stack
+- **Backend**: Rails 6.1.7.10
+- **Ruby**: 3.1.7
+- **Database**: PostgreSQL
+- **Payment Processing**: Stripe API
+- **Image Processing**: CarrierWave + MiniMagick
+- **Authentication**: HTTP Basic Auth (admin), bcrypt (user accounts)
+- **Frontend**: Bootstrap, SCSS, ERB templates
+
+### Database Schema
+- **Products**: Name, description, price, quantity, category association, image upload
+- **Categories**: Organized product groupings
+- **Users**: Email-based accounts with secure password storage
+- **Orders**: Complete order tracking with line items and Stripe integration
+- **Line Items**: Individual product entries within orders
+
+### Key Features Implemented
+- ✅ Product catalog with categorization
+- ✅ Shopping cart with session persistence
+- ✅ User registration and authentication
+- ✅ Stripe payment integration
+- ✅ Admin product management
+- ✅ Responsive image handling
+- ✅ Order management system
+- ✅ Robust error handling
+
+## 🔧 Development Notes
+
+### Image Management
+Images are processed through CarrierWave with three sizes:
+- **Full size**: Original uploaded image
+- **Thumb**: 300x300px for product listings
+- **Tiny**: 100x100px for cart/admin views
+
+### Admin Access
+Admin functionality is protected by HTTP Basic Authentication. Use the credentials provided above to access product management features.
+
+### Error Handling
+The application includes comprehensive error handling for:
+- Missing product images
+- Failed payment processing
+- User creation during checkout
+- Invalid form submissions
+
+## 📦 Dependencies
+
+- **Rails**: 6.1.7.10
+- **Ruby**: 3.1.7
+- **PostgreSQL**: 9.x+
+- **Stripe**: Payment processing
+- **CarrierWave**: File uploads
+- **MiniMagick**: Image processing
+- **Bootstrap**: UI framework
+- **bcrypt**: Password encryption
