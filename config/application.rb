@@ -35,7 +35,11 @@ module Jungle
       g.assets       false
     end
 
-    # Do not swallow errors in after_commit/after_rollback callbacks.
-    config.active_record.raise_in_transactional_callbacks = true
+
+    # Load defaults for Rails 6.1
+    config.load_defaults 6.1
+    
+    # Disable static file serving to avoid middleware initialization issues
+    config.public_file_server.enabled = false
   end
 end

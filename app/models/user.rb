@@ -1,4 +1,4 @@
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   has_secure_password
 
   validates :password, presence: true, length: { minimum: 6, maximum: 20 }, on: :create
