@@ -36,7 +36,19 @@ class OrdersController < ApplicationController
   end
 
   def create_order(stripe_charge)
+    # Find or create user based on email from Stripe
+    user = User.find_by(email: params[:stripeEmail])
+    unless user
+      temp_password = SecureRandom.hex(8)
+      user = User.create!(
+        email: params[:stripeEmail],
+        password: temp_password,
+        password_confirmation: temp_password
+      )
+    end
+    
     order = Order.new(
+      user_id: user.id,
       email: params[:stripeEmail],
       total_cents: cart_subtotal_cents,
       stripe_charge_id: stripe_charge.id, # returned by stripe
