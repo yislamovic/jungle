@@ -1,0 +1,37 @@
+databases:
+  - name: jungle-db
+    databaseName: jungle_production
+    user: jungle
+    plan: free
+
+services:
+  - type: web
+    name: jungle-rails-app
+    env: ruby
+    repo: https://github.com/yislamovic/jungle 
+    buildCommand: "./bin/render-build.sh"
+    startCommand: "bundle exec rails server -b 0.0.0.0 -p $PORT -e production"
+    plan: free
+    branch: master # or main, depending on your default branch
+    healthCheckPath: "/"
+    envVars:
+      - key: RAILS_MASTER_KEY
+        sync: false # You'll set this manually in Render dashboard
+      - key: DATABASE_URL
+        fromDatabase:
+          name: jungle-db
+          property: connectionString
+      - key: RAILS_ENV
+        value: production
+      - key: NODE_ENV
+        value: production
+      - key: BUNDLE_WITHOUT
+        value: development:test
+      - key: STRIPE_PUBLISHABLE_KEY
+        sync: false # Set this in Render dashboard
+      - key: STRIPE_SECRET_KEY
+        sync: false # Set this in Render dashboard
+      - key: HTTP_BASIC_USER
+        value: admin
+      - key: HTTP_BASIC_PASSWORD
+        sync: false # Set this in Render dashboard
