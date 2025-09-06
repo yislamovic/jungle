@@ -184,14 +184,30 @@ class SetupController < ApplicationController
               diagnostics << "📁 Copied images for #{product.name}"
             end
             
-            # Create original file from thumbnail if it doesn't exist
+            # Ensure all 3 image versions exist (original, thumb, tiny)
             original_file = target_dir.join(item[:file])
             thumb_file = target_dir.join('thumb', "thumb_#{item[:file]}")
+            tiny_file = target_dir.join('tiny', "tiny_#{item[:file]}")
             
-            if File.exist?(thumb_file) && !File.exist?(original_file)
-              FileUtils.cp(thumb_file, original_file)
-              diagnostics << "📷 Created original from thumbnail: #{item[:file]}"
+            # Create original file from best available source
+            if !File.exist?(original_file)
+              if File.exist?(thumb_file)
+                FileUtils.cp(thumb_file, original_file)
+                diagnostics << "📷 Created original from thumb: #{item[:file]}"
+              elsif File.exist?(tiny_file)
+                FileUtils.cp(tiny_file, original_file)
+                diagnostics << "📷 Created original from tiny: #{item[:file]}"
+              else
+                diagnostics << "⚠️  No source image found for #{item[:file]}"
+              end
             end
+            
+            # Verify all versions exist
+            versions_exist = []
+            versions_exist << "original" if File.exist?(original_file)
+            versions_exist << "thumb" if File.exist?(thumb_file) 
+            versions_exist << "tiny" if File.exist?(tiny_file)
+            diagnostics << "📂 Available versions for #{item[:file]}: #{versions_exist.join(', ')}"
             
             # Update database
             product.update_column(:image, item[:file])
