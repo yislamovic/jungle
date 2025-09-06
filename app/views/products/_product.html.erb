@@ -4,7 +4,13 @@
   <% end %>
   <header>
     <%= link_to product do %>
-      <%= image_tag product.image.thumb.url, alt: product.name if product.image.present? %>
+      <% if product.image.present? %>
+        <%= image_tag product.image.thumb.url, alt: product.name %>
+      <% else %>
+        <div class="product-placeholder">
+          <span>No Image</span>
+        </div>
+      <% end %>
       <h4><%= product.name %></h4>
     <% end %>
   </header>
