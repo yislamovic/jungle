@@ -5,11 +5,12 @@ class SetupController < ApplicationController
   def database
     if Rails.env.production?
       begin
-        # Check if tables already exist
-        tables_exist = ActiveRecord::Base.connection.data_sources.any?
+        # Check if application tables exist (not just Rails system tables)
+        existing_tables = ActiveRecord::Base.connection.data_sources
+        app_tables_exist = existing_tables.include?('products') && existing_tables.include?('categories')
         
-        if tables_exist
-          render plain: "✅ Database already set up! Tables exist: #{ActiveRecord::Base.connection.data_sources.join(', ')}"
+        if app_tables_exist
+          render plain: "✅ Database already set up! Tables exist: #{existing_tables.join(', ')}"
         else
           # Run migrations
           ActiveRecord::Tasks::DatabaseTasks.migrate
@@ -17,7 +18,9 @@ class SetupController < ApplicationController
           # Run seeds
           Rails.application.load_seed
           
-          render plain: "✅ Database setup completed successfully! Migrations and seeds have been run."
+          # Check tables after setup
+          new_tables = ActiveRecord::Base.connection.data_sources
+          render plain: "✅ Database setup completed successfully! Migrations and seeds have been run.\nTables now: #{new_tables.join(', ')}"
         end
       rescue => e
         render plain: "❌ Database setup failed: #{e.message}\n\nFull error:\n#{e.backtrace.join("\n")}"
