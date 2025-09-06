@@ -1,5 +1,6 @@
 # Auto-setup database for Render deployment
-if Rails.env.production? && ENV['RENDER'].present?
+# Temporarily disabled - will run manually
+if false # Rails.env.production? && ENV['RENDER'].present?
   Rails.application.config.after_initialize do
     begin
       # Check if database exists and has tables
