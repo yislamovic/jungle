@@ -239,4 +239,52 @@ class SetupController < ApplicationController
       render plain: "❌ This endpoint only works in production environment"
     end
   end
+
+  def check_images
+    if Rails.env.production?
+      begin
+        diagnostics = []
+        diagnostics << "🔍 Checking image directories and files..."
+        
+        # Check what image directories exist
+        uploads_path = Rails.root.join('public', 'uploads', 'product', 'image')
+        diagnostics << "📁 Uploads path: #{uploads_path}"
+        
+        if Dir.exist?(uploads_path)
+          directories = Dir.glob(uploads_path.join('*')).select { |d| File.directory?(d) }
+          diagnostics << "📂 Found #{directories.count} directories:"
+          
+          directories.each do |dir|
+            dir_name = File.basename(dir)
+            files = Dir.glob(File.join(dir, '**', '*')).select { |f| File.file?(f) }
+            image_files = files.select { |f| f.match?(/\.(jpg|jpeg|png)$/i) }
+            diagnostics << "   #{dir_name}/: #{image_files.count} images (#{image_files.map { |f| File.basename(f) }.join(', ')})"
+          end
+        else
+          diagnostics << "❌ Uploads directory doesn't exist!"
+        end
+        
+        # Check seed assets
+        seed_assets_path = Rails.root.join('db', 'seed_assets')
+        if Dir.exist?(seed_assets_path)
+          seed_files = Dir.glob(seed_assets_path.join('*.jpg')).map { |f| File.basename(f) }
+          diagnostics << "🌱 Seed assets: #{seed_files.join(', ')}"
+        else
+          diagnostics << "❌ Seed assets directory doesn't exist"
+        end
+        
+        # Check current products
+        diagnostics << "\n📊 Current products:"
+        Product.all.each do |p|
+          diagnostics << "   Product ##{p.id}: #{p.name} (image: #{p.image || 'none'})"
+        end
+        
+        render plain: diagnostics.join("\n")
+      rescue => e
+        render plain: "❌ Image check failed: #{e.message}\n\nFull error:\n#{e.backtrace.join("\n")}"
+      end
+    else
+      render plain: "❌ This endpoint only works in production environment"
+    end
+  end
 end
