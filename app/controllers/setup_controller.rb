@@ -1,6 +1,6 @@
 class SetupController < ApplicationController
   # Skip any authentication for this setup route
-  skip_before_action :verify_authenticity_token, only: [:database, :diagnostic, :seed]
+  skip_before_action :verify_authenticity_token, only: [:database, :diagnostic, :seed, :simple_seed]
 
   def database
     if Rails.env.production?
@@ -100,6 +100,25 @@ class SetupController < ApplicationController
         render plain: diagnostics.join("\n")
       rescue => e
         render plain: "❌ Seeding failed: #{e.message}\n\nFull error:\n#{e.backtrace.join("\n")}"
+      end
+    else
+      render plain: "❌ This endpoint only works in production environment"
+    end
+  end
+
+  def simple_seed
+    if Rails.env.production?
+      begin
+        # Load simple seeds without images
+        load Rails.root.join('db', 'simple_seeds.rb')
+        
+        # Check results
+        products_count = Product.count
+        categories_count = Category.count
+        
+        render plain: "✅ Simple seeds completed successfully!\nCreated: #{categories_count} categories, #{products_count} products (without images)"
+      rescue => e
+        render plain: "❌ Simple seeding failed: #{e.message}\n\nFull error:\n#{e.backtrace.join("\n")}"
       end
     else
       render plain: "❌ This endpoint only works in production environment"
