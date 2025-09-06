@@ -151,71 +151,88 @@ class SetupController < ApplicationController
     if Rails.env.production?
       begin
         diagnostics = []
-        diagnostics << "🔧 Running image fix script..."
+        diagnostics << "🔧 Creating images from seed assets..."
         
-        # Run the image fix inline
+        # Create the uploads directory structure
+        uploads_dir = Rails.root.join('public', 'uploads', 'product', 'image')
+        FileUtils.mkdir_p(uploads_dir) unless Dir.exist?(uploads_dir)
+        diagnostics << "📁 Created uploads directory: #{uploads_dir}"
+        
+        # Map products to their corresponding seed assets (based on current product IDs 1-10)
         products_and_images = [
-          { id: 29, name: "Men's Classy Shirt", file: "apparel1.jpg", source_dir: 1 },
-          { id: 30, name: "Women's Zebra Pants", file: "apparel2.jpg", source_dir: 2 },
-          { id: 31, name: "Hipster Hat", file: "apparel3.jpg", source_dir: 3 },
-          { id: 32, name: "Hipster Socks", file: "apparel4.jpg", source_dir: 4 },
-          { id: 33, name: "Modern Skateboards", file: "electronics1.jpg", source_dir: 7 },
-          { id: 34, name: "Hotdog Slicer", file: "electronics2.jpg", source_dir: 8 },
-          { id: 35, name: "World's Largest Smartwatch", file: "electronics3.jpg", source_dir: 9 },
-          { id: 36, name: "Optimal Sleeping Bed", file: "furniture1.jpg", source_dir: 10 },
-          { id: 37, name: "Electric Chair", file: "furniture2.jpg", source_dir: 11 },
-          { id: 38, name: "Red Bookshelf", file: "furniture3.jpg", source_dir: 12 }
+          { id: 1, name: "Men's Classy Shirt", file: "apparel1.jpg" },
+          { id: 2, name: "Women's Zebra Pants", file: "apparel2.jpg" },
+          { id: 3, name: "Hipster Hat", file: "apparel3.jpg" },
+          { id: 4, name: "Hipster Socks", file: "apparel4.jpg" },
+          { id: 5, name: "Modern Skateboards", file: "electronics1.jpg" },
+          { id: 6, name: "Hotdog Slicer", file: "electronics2.jpg" },
+          { id: 7, name: "World's Largest Smartwatch", file: "electronics3.jpg" },
+          { id: 8, name: "Optimal Sleeping Bed", file: "furniture1.jpg" },
+          { id: 9, name: "Electric Chair", file: "furniture2.jpg" },
+          { id: 10, name: "Red Bookshelf", file: "furniture3.jpg" }
         ]
 
+        seed_assets_path = Rails.root.join('db', 'seed_assets')
         fixed_count = 0
 
         products_and_images.each do |item|
           product = Product.find_by(id: item[:id])
           next unless product
           
-          # Path to source directory with existing thumbnails
-          source_dir = Rails.root.join('public', 'uploads', 'product', 'image', item[:source_dir].to_s)
-          target_dir = Rails.root.join('public', 'uploads', 'product', 'image', item[:id].to_s)
+          diagnostics << "\n🔄 Processing #{product.name}:"
           
-          if Dir.exist?(source_dir)
-            # Copy entire directory structure if target doesn't exist
-            if !Dir.exist?(target_dir)
-              FileUtils.cp_r(source_dir, target_dir)
-              diagnostics << "📁 Copied images for #{product.name}"
-            end
+          # Create product image directory
+          product_dir = uploads_dir.join(item[:id].to_s)
+          FileUtils.mkdir_p(product_dir) unless Dir.exist?(product_dir)
+          FileUtils.mkdir_p(product_dir.join('thumb')) unless Dir.exist?(product_dir.join('thumb'))
+          FileUtils.mkdir_p(product_dir.join('tiny')) unless Dir.exist?(product_dir.join('tiny'))
+          
+          # Source file from seed assets
+          source_file = seed_assets_path.join(item[:file])
+          
+          if File.exist?(source_file)
+            # Copy original image
+            original_file = product_dir.join(item[:file])
+            FileUtils.cp(source_file, original_file)
+            diagnostics << "   📷 Created original: #{item[:file]}"
             
-            # Ensure all 3 image versions exist (original, thumb, tiny)
-            original_file = target_dir.join(item[:file])
-            thumb_file = target_dir.join('thumb', "thumb_#{item[:file]}")
-            tiny_file = target_dir.join('tiny', "tiny_#{item[:file]}")
-            
-            # Create original file from best available source
-            if !File.exist?(original_file)
-              if File.exist?(thumb_file)
-                FileUtils.cp(thumb_file, original_file)
-                diagnostics << "📷 Created original from thumb: #{item[:file]}"
-              elsif File.exist?(tiny_file)
-                FileUtils.cp(tiny_file, original_file)
-                diagnostics << "📷 Created original from tiny: #{item[:file]}"
-              else
-                diagnostics << "⚠️  No source image found for #{item[:file]}"
+            # Create thumbnails using CarrierWave-style processing
+            begin
+              require 'mini_magick'
+              
+              # Create thumb version (300x300)
+              thumb_file = product_dir.join('thumb', "thumb_#{item[:file]}")
+              MiniMagick::Tool::Convert.new do |convert|
+                convert << source_file.to_s
+                convert.resize "300x300>"
+                convert << thumb_file.to_s
               end
+              diagnostics << "   🖼️  Created thumb (300x300): thumb_#{item[:file]}"
+              
+              # Create tiny version (100x100)  
+              tiny_file = product_dir.join('tiny', "tiny_#{item[:file]}")
+              MiniMagick::Tool::Convert.new do |convert|
+                convert << source_file.to_s
+                convert.resize "100x100>"
+                convert << tiny_file.to_s
+              end
+              diagnostics << "   🖼️  Created tiny (100x100): tiny_#{item[:file]}"
+              
+            rescue => thumb_error
+              diagnostics << "   ⚠️  Thumbnail creation failed: #{thumb_error.message}"
+              # Fallback: copy original as thumbnails
+              FileUtils.cp(source_file, product_dir.join('thumb', "thumb_#{item[:file]}"))
+              FileUtils.cp(source_file, product_dir.join('tiny', "tiny_#{item[:file]}"))
+              diagnostics << "   📷 Created thumbnails as copies of original"
             end
-            
-            # Verify all versions exist
-            versions_exist = []
-            versions_exist << "original" if File.exist?(original_file)
-            versions_exist << "thumb" if File.exist?(thumb_file) 
-            versions_exist << "tiny" if File.exist?(tiny_file)
-            diagnostics << "📂 Available versions for #{item[:file]}: #{versions_exist.join(', ')}"
             
             # Update database
             product.update_column(:image, item[:file])
-            diagnostics << "✅ Fixed #{product.name}"
+            diagnostics << "   ✅ Updated database: Product ##{product.id} -> #{item[:file]}"
             
             fixed_count += 1
           else
-            diagnostics << "⚠️  No images found for #{product.name}"
+            diagnostics << "   ❌ Source file not found: #{source_file}"
           end
         end
 
@@ -225,7 +242,7 @@ class SetupController < ApplicationController
         diagnostics << "\n🔍 Verification:"
         Product.all.each do |p|
           if p.image.present?
-            diagnostics << "✅ #{p.name}: Has image"
+            diagnostics << "✅ #{p.name}: #{p.image}"
           else  
             diagnostics << "❌ #{p.name}: No image"
           end
