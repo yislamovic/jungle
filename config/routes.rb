@@ -22,6 +22,7 @@ Rails.application.routes.draw do
   # Database setup route for Render deployment
   get '/setup/database' => 'setup#database'
   get '/setup/diagnostic' => 'setup#diagnostic'
+  get '/setup/seed' => 'setup#seed'
 
   namespace :admin do
     root to: 'dashboard#show'
