@@ -1,6 +1,7 @@
 class SetupController < ApplicationController
   # Skip any authentication for this setup route
   skip_before_action :verify_authenticity_token, only: [:database, :diagnostic]
+  skip_before_action :authorize_user, only: [:database, :diagnostic], if: :respond_to?
 
   def database
     if Rails.env.production?
