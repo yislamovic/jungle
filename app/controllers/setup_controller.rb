@@ -72,14 +72,32 @@ class SetupController < ApplicationController
   def seed
     if Rails.env.production?
       begin
+        # Check seed assets directory
+        seed_assets_path = Rails.root.join('db', 'seed_assets')
+        assets_exist = Dir.exist?(seed_assets_path)
+        asset_files = assets_exist ? Dir.glob(seed_assets_path.join('*.jpg')).map { |f| File.basename(f) } : []
+        
+        diagnostics = []
+        diagnostics << "🔍 Seed assets directory exists: #{assets_exist}"
+        diagnostics << "📁 Seed assets path: #{seed_assets_path}"
+        diagnostics << "🖼️  Asset files found: #{asset_files.join(', ')}" if asset_files.any?
+        diagnostics << "❌ No asset files found!" if asset_files.empty?
+        
+        # Check current state
+        products_before = Product.count
+        categories_before = Category.count
+        diagnostics << "📊 Before seeding: #{categories_before} categories, #{products_before} products"
+        
         # Force run seeds
         Rails.application.load_seed
         
         # Check results
-        products_count = Product.count
-        categories_count = Category.count
+        products_after = Product.count
+        categories_after = Category.count
+        diagnostics << "📊 After seeding: #{categories_after} categories, #{products_after} products"
+        diagnostics << "✅ Seeds completed successfully!"
         
-        render plain: "✅ Seeds completed successfully!\nCreated: #{categories_count} categories, #{products_count} products"
+        render plain: diagnostics.join("\n")
       rescue => e
         render plain: "❌ Seeding failed: #{e.message}\n\nFull error:\n#{e.backtrace.join("\n")}"
       end
