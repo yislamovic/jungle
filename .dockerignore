@@ -1,0 +1,15 @@
+.git
+.gitignore
+README.md
+Dockerfile
+docker-compose.yml
+.dockerignore
+node_modules
+tmp/cache
+tmp/pids
+tmp/sockets
+log/*.log
+public/assets
+.env
+.env.local
+.env.*.local
