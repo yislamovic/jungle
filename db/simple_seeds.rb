@@ -1,5 +1,10 @@
 puts "Running simple seeds without images..."
 
+# Load Rails environment if not already loaded
+unless defined?(Rails)
+  require_relative '../config/environment'
+end
+
 # Create categories
 cat1 = Category.find_or_create_by!(name: 'Apparel')
 cat2 = Category.find_or_create_by!(name: 'Electronics') 

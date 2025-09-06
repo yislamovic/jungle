@@ -88,14 +88,36 @@ class SetupController < ApplicationController
         categories_before = Category.count
         diagnostics << "📊 Before seeding: #{categories_before} categories, #{products_before} products"
         
-        # Force run seeds
-        Rails.application.load_seed
+        # Try with images first, fallback to simple seeds
+        begin
+          # Check if seed assets exist
+          seed_assets_path = Rails.root.join('db', 'seed_assets')
+          assets_exist = Dir.exist?(seed_assets_path) && Dir.glob(seed_assets_path.join('*.jpg')).any?
+          
+          if assets_exist
+            diagnostics << "🖼️  Running full seeds with images..."
+            Rails.application.load_seed
+            diagnostics << "✅ Full database seeding completed"
+          else
+            diagnostics << "📁 Seed assets not found, running simple seeds without images..."
+            load Rails.root.join('db', 'simple_seeds.rb')
+            diagnostics << "✅ Simple database seeding completed"
+          end
+        rescue => seed_error
+          diagnostics << "⚠️  Full seeding failed (#{seed_error.message}), trying simple seeds..."
+          begin
+            load Rails.root.join('db', 'simple_seeds.rb')
+            diagnostics << "✅ Simple database seeding completed as fallback"
+          rescue => simple_seed_error
+            diagnostics << "❌ Both seeding methods failed: Full (#{seed_error.message}), Simple (#{simple_seed_error.message})"
+            raise simple_seed_error
+          end
+        end
         
         # Check results
         products_after = Product.count
         categories_after = Category.count
         diagnostics << "📊 After seeding: #{categories_after} categories, #{products_after} products"
-        diagnostics << "✅ Seeds completed successfully!"
         
         render plain: diagnostics.join("\n")
       rescue => e
