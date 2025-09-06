@@ -304,4 +304,55 @@ class SetupController < ApplicationController
       render plain: "❌ This endpoint only works in production environment"
     end
   end
+
+  def test_main_page
+    if Rails.env.production?
+      begin
+        diagnostics = []
+        diagnostics << "🔍 Testing main page components..."
+        
+        # Test products loading
+        begin
+          products = Product.all
+          diagnostics << "✅ Products loaded: #{products.count} products found"
+          
+          # Test each product's image handling
+          products.each do |p|
+            begin
+              image_url = p.image.present? ? p.image.url : "none"
+              diagnostics << "   Product ##{p.id} (#{p.name}): image #{image_url}"
+            rescue => img_error
+              diagnostics << "   ❌ Product ##{p.id} image error: #{img_error.message}"
+            end
+          end
+          
+        rescue => product_error
+          diagnostics << "❌ Product loading failed: #{product_error.message}"
+        end
+        
+        # Test categories
+        begin
+          categories = Category.all
+          diagnostics << "✅ Categories loaded: #{categories.count} categories found"
+        rescue => cat_error
+          diagnostics << "❌ Category loading failed: #{cat_error.message}"
+        end
+        
+        # Test view rendering
+        begin
+          # Try to render the products index view logic without actual rendering
+          @products = Product.all
+          diagnostics << "✅ Products instance variable set for view"
+        rescue => view_error
+          diagnostics << "❌ View setup failed: #{view_error.message}"
+        end
+        
+        render plain: diagnostics.join("\n")
+      rescue => e
+        render plain: "❌ Main page test failed: #{e.message}\n\nFull error:\n#{e.backtrace.join("\n")}"
+      end
+    else
+      render plain: "❌ This endpoint only works in production environment"
+    end
+  end
 end

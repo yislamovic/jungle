@@ -26,6 +26,7 @@ Rails.application.routes.draw do
   get '/setup/simple_seed' => 'setup#simple_seed'
   get '/setup/fix_images' => 'setup#fix_images'
   get '/setup/check_images' => 'setup#check_images'
+  get '/setup/test_main_page' => 'setup#test_main_page'
 
   namespace :admin do
     root to: 'dashboard#show'
