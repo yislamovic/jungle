@@ -1,6 +1,9 @@
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
+  # Force secret_key_base for Render deployment
+  config.secret_key_base = ENV['SECRET_KEY_BASE'] || '58f151710b734d7cbe9f267b1773a7a61d89e2cf41aa502b735b6e6498fd7ecea255673a1dbbb319d42a040e76f02772f131ae732f5aa49931b903223083c947'
+
   # Code is not reloaded between requests.
   config.cache_classes = true
 
