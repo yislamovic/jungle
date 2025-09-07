@@ -5,7 +5,7 @@
   <header>
     <%= link_to product do %>
       <% if product.image_filename.present? %>
-        <%= image_tag product.image_asset_name, alt: product.name %>
+        <img src="<%= product.image_url %>" alt="<%= product.name %>">
       <% else %>
         <div class="product-placeholder">
           <span>No Image</span>
