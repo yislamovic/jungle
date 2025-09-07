@@ -1,0 +1,31 @@
+development:
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+  database: jungle_development
+  username: <%= ENV['DATABASE_USERNAME'] || '' %>
+  password: <%= ENV['DATABASE_PASSWORD'] || '' %>
+  host: <%= ENV['DATABASE_HOST'] || 'localhost' %>
+
+test:
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+  database: jungle_test
+  username: <%= ENV['DATABASE_USERNAME'] || '' %>
+  password: <%= ENV['DATABASE_PASSWORD'] || '' %>
+  host: <%= ENV['DATABASE_HOST'] || 'localhost' %>
+
+production:
+  <% if ENV['DATABASE_URL'].present? %>
+  url: <%= ENV['DATABASE_URL'] %>
+  <% else %>
+  adapter: postgresql
+  encoding: unicode
+  database: jungle_production
+  username: jungle
+  password: password
+  host: localhost
+  port: 5432
+  <% end %>
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>

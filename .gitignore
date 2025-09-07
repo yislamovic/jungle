@@ -13,7 +13,7 @@
 /public/uploads
 
 # Ignore db creds / settings
-/config/database.yml
+# /config/database.yml  # Commented out for Render deployment - using environment variables
 
 *.rbc
 capybara-*.html
