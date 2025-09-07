@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_09_05_202144) do
+ActiveRecord::Schema.define(version: 2025_09_07_133656) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -51,6 +51,7 @@ ActiveRecord::Schema.define(version: 2025_09_05_202144) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "category_id"
+    t.string "image_filename"
     t.index ["category_id"], name: "index_products_on_category_id"
   end
 
@@ -63,7 +64,7 @@ ActiveRecord::Schema.define(version: 2025_09_05_202144) do
     t.datetime "updated_at", null: false
   end
 
-  add_foreign_key "line_items", "orders", name: "fk_rails_order_id", on_delete: :cascade
-  add_foreign_key "line_items", "products", name: "fk_rails_product_id", on_delete: :cascade
-  add_foreign_key "products", "categories", name: "fk_rails_category_id", on_delete: :cascade
+  add_foreign_key "line_items", "orders"
+  add_foreign_key "line_items", "products"
+  add_foreign_key "products", "categories"
 end

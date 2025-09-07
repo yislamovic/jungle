@@ -10,6 +10,9 @@ RUN apt-get update && apt-get install -y \
     libmagickwand-dev \
     git \
     curl \
+    libyaml-dev \
+    pkg-config \
+    libsqlite3-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
@@ -17,7 +20,7 @@ WORKDIR /app
 
 # Copy Gemfile and install gems
 COPY Gemfile Gemfile.lock ./
-RUN bundle install --deployment --without development test
+RUN bundle install --without development test
 
 # Copy application code
 COPY . .

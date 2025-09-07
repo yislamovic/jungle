@@ -9,8 +9,8 @@
     <div class="row">
 
       <div class="col-sm-4">
-        <% if @product.image.present? %>
-          <%= image_tag @product.image.url, class: 'main-img' %>
+        <% if @product.image_filename.present? %>
+          <%= image_tag @product.image_url, class: 'main-img' %>
         <% else %>
           <div class="product-placeholder" style="width: 100%; height: 300px;">
             <span>No Image Available</span>
