@@ -9,9 +9,9 @@ class Product < ApplicationRecord
   validates :quantity, presence: true
   validates :category, presence: true
 
-  def image_url
-    return "/images/#{image_filename}" if image_filename.present?
-    "/images/placeholder.jpg"
+  def image_asset_name
+    return image_filename if image_filename.present?
+    "placeholder.jpg"
   end
 
 end
