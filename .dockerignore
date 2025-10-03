@@ -1,15 +1,56 @@
+# Git
 .git
 .gitignore
-README.md
+
+# Docker files
 Dockerfile
-docker-compose.yml
+docker-compose*.yml
 .dockerignore
-node_modules
-tmp/cache
-tmp/pids
-tmp/sockets
-log/*.log
+
+# Documentation
+*.md
+docs/
+
+# Environment files
+.env*
+!.env.production.example
+
+# Development files
+.byebug_history
+.rspec
+.ruby-version
+.ruby-gemset
+
+# Test files
+spec/
+test/
+
+# Logs
+log/*
+tmp/*
+*.log
+
+# Database files
+*.sqlite3
+db/*.sqlite3
+
+# Node modules
+node_modules/
+npm-debug.log
+
+# macOS
+.DS_Store
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Coverage reports
+coverage/
+
+# Local development
+public/uploads/*
 public/assets
-.env
-.env.local
-.env.*.local
