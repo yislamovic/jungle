@@ -102,7 +102,7 @@ body {
 
 // ===== PAGE HEADERS =====
 .page-header {
-  background: white;
+  background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
   color: $jungle-gray;
   padding: 40px 0;
   margin: 0 0 40px 0;
@@ -147,7 +147,7 @@ body {
   article.product {
     background: white;
     border-radius: 16px;
-    overflow: hidden;
+    overflow: visible;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     border: 1px solid rgba(0, 0, 0, 0.05);
@@ -158,19 +158,19 @@ body {
       box-shadow: 0 12px 32px rgba(220, 38, 38, 0.15);
     }
 
-    // Sold out overlay
-    .sold-out {
+    // Sold out overlay - positioned relative to the article
+    > .sold-out {
       position: absolute;
-      top: 50%;
+      top: 140px;
       left: 50%;
-      transform: translate(-50%, -50%);
+      transform: translateX(-50%);
       background: rgba(220, 38, 38, 0.95);
       color: white;
       padding: 12px 28px;
       border-radius: 8px;
       font-weight: 700;
       font-size: 20px;
-      z-index: 30;
+      z-index: 100;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
       letter-spacing: 1px;
       pointer-events: none;
@@ -181,14 +181,10 @@ body {
       overflow: hidden;
       background: $jungle-gray-lighter;
       height: 280px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      border-radius: 16px 16px 0 0;
 
       a {
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        display: block;
         width: 100%;
         height: 100%;
       }
@@ -196,9 +192,8 @@ body {
       img {
         width: 100%;
         height: 100%;
-        object-fit: contain;
+        object-fit: cover;
         transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        padding: 16px;
       }
 
       &:hover img {
