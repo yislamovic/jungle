@@ -9,7 +9,7 @@
     <div class="cart-container">
       <div class="cart-items-section">
         <h2 class="section-title">
-          <%= fa_icon "list" %> Cart Items
+          Cart Items
           <span class="item-count"><%= enhanced_cart.size %> <%= enhanced_cart.size == 1 ? 'item' : 'items' %></span>
         </h2>
 
@@ -42,6 +42,9 @@
           </div>
 
           <div class="checkout-section">
+            <div class="test-card-info">
+              <strong><%= fa_icon "info-circle" %> Test Mode:</strong> Use card <code>4242 4242 4242 4242</code>, any future date, any CVC
+            </div>
             <%= form_tag orders_path, class: 'checkout-form' do %>
               <script
                 src="https://checkout.stripe.com/checkout.js" class="stripe-button"
@@ -52,7 +55,8 @@
                 data-locale="auto"
                 data-email="customer@jungle.com"
                 data-currency="cad"
-                data-label="Proceed to Checkout">
+                data-label="Proceed to Checkout"
+                data-panel-label="Pay {{amount}}">
               </script>
             <% end %>
 
@@ -60,10 +64,6 @@
               <%= fa_icon "arrow-left" %> Continue Shopping
             <% end %>
           </div>
-        </div>
-
-        <div class="secure-checkout-badge">
-          <%= fa_icon "lock" %> Secure Checkout
         </div>
       </div>
     </div>
@@ -186,6 +186,30 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+
+  .test-card-info {
+    background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+    border-left: 4px solid #3b82f6;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #1e40af;
+    margin-bottom: 8px;
+
+    .fa {
+      margin-right: 6px;
+    }
+
+    code {
+      background: white;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 700;
+      color: #1e40af;
+      font-size: 12px;
+      letter-spacing: 0.5px;
+    }
+  }
 
   .checkout-form {
     margin-bottom: 0;

@@ -1,7 +1,7 @@
 <div class="cart-item-card">
   <div class="cart-item-image">
-    <% if product.image.present? %>
-      <%= image_tag product.image.tiny.url, alt: product.name, class: 'item-img' %>
+    <% if product.image_filename.present? %>
+      <img src="<%= product.image_url %>" alt="<%= product.name %>" class="item-img">
     <% else %>
       <div class="item-img-placeholder">
         <%= fa_icon "image" %>

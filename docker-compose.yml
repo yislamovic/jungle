@@ -9,6 +9,8 @@ services:
       - DATABASE_URL=sqlite3:db/production.sqlite3
       - RAILS_SERVE_STATIC_FILES=true
       - RAILS_LOG_TO_STDOUT=true
+      - STRIPE_PUBLISHABLE_KEY=${STRIPE_PUBLISHABLE_KEY}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
     volumes:
       - ./db:/app/db
       - ./public/uploads:/app/public/uploads

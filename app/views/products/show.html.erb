@@ -8,29 +8,28 @@
   </header>
 
   <article class="product-detail-modern">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-6">
-          <div class="product-image-container">
-            <% if @product.image_filename.present? %>
-              <img src="<%= @product.image_url %>" class="product-image-main" alt="<%= @product.name %>">
-            <% else %>
-              <div class="product-placeholder-modern">
-                <%= fa_icon "image", class: "placeholder-icon" %>
-                <span>No Image Available</span>
-              </div>
-            <% end %>
+    <div class="product-detail-grid">
+      <div class="product-detail-left">
+        <div class="product-image-container">
+          <% if @product.image_filename.present? %>
+            <img src="<%= @product.image_url %>" class="product-image-main" alt="<%= @product.name %>">
+          <% else %>
+            <div class="product-placeholder-modern">
+              <%= fa_icon "image", class: "placeholder-icon" %>
+              <span>No Image Available</span>
+            </div>
+          <% end %>
 
-            <% if @product.quantity == 0 %>
-              <div class="sold-out-badge">
-                <%= fa_icon "ban" %> SOLD OUT
-              </div>
-            <% end %>
-          </div>
+          <% if @product.quantity == 0 %>
+            <div class="sold-out-badge">
+              <%= fa_icon "ban" %> SOLD OUT
+            </div>
+          <% end %>
         </div>
+      </div>
 
-        <div class="col-md-6">
-          <div class="product-info-panel">
+      <div class="product-detail-right">
+        <div class="product-info-panel">
             <h2 class="product-title"><%= @product.name %></h2>
 
             <div class="product-price-tag">
@@ -127,19 +126,22 @@
   padding: 32px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
   animation: fadeInUp 0.6s ease-out;
-  overflow: visible;
 }
 
-.product-detail-modern .container {
-  overflow: visible;
+.product-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.product-detail-modern .row {
-  overflow: visible;
+.product-detail-left {
+  min-width: 0;
 }
 
-.product-detail-modern .col-md-6 {
-  overflow: visible;
+.product-detail-right {
+  min-width: 0;
 }
 
 .product-image-container {
@@ -196,11 +198,8 @@
 }
 
 .product-info-panel {
-  padding-left: 24px;
-  padding-right: 0;
-  overflow: visible;
   width: 100%;
-  box-sizing: border-box;
+  min-width: 0;
 }
 
 .product-title {
@@ -386,13 +385,12 @@
 
 @media (max-width: 768px) {
   .product-detail-modern {
-    padding: 20px 12px;
+    padding: 20px 16px;
   }
 
-  .product-info-panel {
-    padding-left: 0;
-    padding-right: 0;
-    margin-top: 32px;
+  .product-detail-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
   }
 
   .product-title {
@@ -409,7 +407,7 @@
 
   .product-actions .btn {
     font-size: 15px;
-    padding: 12px 10px;
+    padding: 12px;
   }
 }
 </style>
