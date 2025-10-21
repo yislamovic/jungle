@@ -1,37 +1,367 @@
 <section class="products-show">
-
   <header class="page-header">
-    <h1><%= link_to @product.category.name, @product.category %> &raquo; <%= @product.name %></h1>
+    <h1>
+      <%= link_to @product.category.name, @product.category, class: 'category-link' %>
+      <span class="breadcrumb-separator"><%= fa_icon "angle-right" %></span>
+      <%= @product.name %>
+    </h1>
   </header>
 
-  <article class="product-detail">
+  <article class="product-detail-modern">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="product-image-container">
+            <% if @product.image_filename.present? %>
+              <img src="<%= @product.image_url %>" class="product-image-main" alt="<%= @product.name %>">
+            <% else %>
+              <div class="product-placeholder-modern">
+                <%= fa_icon "image", class: "placeholder-icon" %>
+                <span>No Image Available</span>
+              </div>
+            <% end %>
 
-    <div class="row">
-
-      <div class="col-sm-4">
-        <% if @product.image_filename.present? %>
-          <img src="<%= @product.image_url %>" class="main-img" alt="<%= @product.name %>">
-        <% else %>
-          <div class="product-placeholder" style="width: 100%; height: 300px;">
-            <span>No Image Available</span>
+            <% if @product.quantity == 0 %>
+              <div class="sold-out-badge">
+                <%= fa_icon "ban" %> SOLD OUT
+              </div>
+            <% end %>
           </div>
-        <% end %>
-      </div>
+        </div>
 
-      <div class="col-sm-8">
-        <dl class="dl-horizontal">
-          <dt>Name</dt>
-          <dd><%= @product.name %></dd>
-          <dt>Description</dt>
-          <dd><%= @product.description %></dd>
-          <dt>Quantity</dt>
-          <dd><%= @product.quantity %></dd>
-          <dt>Price</dt>
-          <dd><%= humanized_money_with_symbol @product.price %></dd>
-        </dl>
+        <div class="col-md-6">
+          <div class="product-info-panel">
+            <h2 class="product-title"><%= @product.name %></h2>
+
+            <div class="product-price-tag">
+              <%= humanized_money_with_symbol @product.price %>
+            </div>
+
+            <div class="product-meta">
+              <div class="meta-item">
+                <%= fa_icon "tag" %>
+                <span class="meta-label">Category:</span>
+                <%= link_to @product.category.name, @product.category, class: 'category-badge' %>
+              </div>
+
+              <div class="meta-item">
+                <%= fa_icon "cubes" %>
+                <span class="meta-label">Stock:</span>
+                <% if @product.quantity == 0 %>
+                  <span class="stock-badge out-of-stock">Out of Stock</span>
+                <% elsif @product.quantity < 5 %>
+                  <span class="stock-badge low-stock"><%= @product.quantity %> remaining</span>
+                <% else %>
+                  <span class="stock-badge in-stock"><%= @product.quantity %> in stock</span>
+                <% end %>
+              </div>
+            </div>
+
+            <div class="product-description">
+              <h3>Description</h3>
+              <p><%= @product.description %></p>
+            </div>
+
+            <div class="product-actions">
+              <% if @product.quantity == 0 %>
+                <%= button_to add_item_cart_path(product_id: @product.id),
+                    class: 'btn btn-primary btn-add-cart btn-lg btn-block',
+                    disabled: true,
+                    method: :post do %>
+                  <%= fa_icon "ban" %> Out of Stock
+                <% end %>
+              <% else %>
+                <%= button_to add_item_cart_path(product_id: @product.id),
+                    class: 'btn btn-primary btn-add-cart btn-lg btn-block',
+                    method: :post do %>
+                  <%= fa_icon "shopping-cart" %> Add to Cart
+                <% end %>
+              <% end %>
+
+              <%= link_to :back, class: 'btn btn-default btn-lg btn-block' do %>
+                <%= fa_icon "arrow-left" %> Continue Shopping
+              <% end %>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-
   </article>
-
 </section>
+
+<style>
+.products-show {
+  padding-bottom: 60px;
+}
+
+.page-header .category-link {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.page-header .category-link:hover {
+  color: white;
+  text-decoration: underline;
+}
+
+.breadcrumb-separator {
+  margin: 0 16px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.product-detail-modern {
+  background: white;
+  border-radius: 20px;
+  padding: 48px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.product-image-container {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #f3f4f6;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.product-image-main {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+.product-image-container:hover .product-image-main {
+  transform: scale(1.05);
+}
+
+.product-placeholder-modern {
+  width: 100%;
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+  color: #9ca3af;
+}
+
+.placeholder-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.sold-out-badge {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(220, 38, 38, 0.95);
+  color: white;
+  padding: 20px 40px;
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 28px;
+  z-index: 10;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  letter-spacing: 2px;
+  backdrop-filter: blur(4px);
+}
+
+.product-info-panel {
+  padding-left: 24px;
+}
+
+.product-title {
+  font-size: 36px;
+  font-weight: 800;
+  color: #1f2937;
+  margin: 0 0 24px;
+  line-height: 1.2;
+}
+
+.product-price-tag {
+  font-size: 48px;
+  font-weight: 900;
+  color: #dc2626;
+  margin-bottom: 32px;
+  text-shadow: 0 2px 4px rgba(220, 38, 38, 0.1);
+}
+
+.product-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+  background: #fafafa;
+  border-radius: 12px;
+  margin-bottom: 32px;
+  border-left: 4px solid #dc2626;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 16px;
+}
+
+.meta-item .fa {
+  color: #dc2626;
+  width: 20px;
+  font-size: 18px;
+}
+
+.meta-label {
+  font-weight: 600;
+  color: #6b7280;
+  min-width: 80px;
+}
+
+.category-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  color: white;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.category-badge:hover {
+  background: linear-gradient(135deg, #b91c1c, #991b1b);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+  text-decoration: none;
+  color: white;
+}
+
+.stock-badge {
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.stock-badge.in-stock {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+}
+
+.stock-badge.low-stock {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
+}
+
+.stock-badge.out-of-stock {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+}
+
+.product-description {
+  margin-bottom: 40px;
+
+  h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  p {
+    font-size: 17px;
+    line-height: 1.8;
+    color: #4b5563;
+  }
+}
+
+.product-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  .btn {
+    font-weight: 700;
+    border-radius: 12px;
+    padding: 18px;
+    font-size: 18px;
+    transition: all 0.3s ease;
+    border: none;
+
+    .fa {
+      margin-right: 10px;
+    }
+  }
+
+  .btn-add-cart {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    box-shadow: 0 4px 16px rgba(220, 38, 38, 0.3);
+
+    &:hover:not(:disabled) {
+      background: linear-gradient(135deg, #b91c1c, #991b1b);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(220, 38, 38, 0.4);
+    }
+
+    &:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+  }
+
+  .btn-default {
+    background: white;
+    color: #dc2626;
+    border: 2px solid #dc2626;
+
+    &:hover {
+      background: #dc2626;
+      color: white;
+      transform: translateY(-3px);
+    }
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .product-detail-modern {
+    padding: 32px 24px;
+  }
+
+  .product-info-panel {
+    padding-left: 0;
+    margin-top: 32px;
+  }
+
+  .product-title {
+    font-size: 28px;
+  }
+
+  .product-price-tag {
+    font-size: 36px;
+  }
+
+  .product-placeholder-modern {
+    min-height: 300px;
+  }
+}
+</style>

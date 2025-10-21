@@ -1,16 +1,288 @@
-<header class="page-header">
-    <h1>Register &raquo; Sign Up!</h1>
-  </header>
-<div class='well signup'>
-  
-      <%= form_for :user, url: '/users' do |f| %>
-        First Name: <%= f.text_field :first_name %>
-        Last Name: <%= f.text_field :last_name %>
-        Email: <%= f.text_field :email %>
-        Password: <%= f.password_field :password %>
-        Password Confirmation: <%= f.password_field :password_confirmation %>
-        <%= f.submit "Submit" %>
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="auth-icon">
+        <%= fa_icon "user-plus", class: "auth-icon-image" %>
+      </div>
+      <h1>Join Jungle</h1>
+      <p>Create your account to start shopping</p>
+    </div>
 
-        <% end %>
-       
+    <%= form_for :user, url: '/users', html: { class: 'auth-form' } do |f| %>
+      <div class="form-row">
+        <div class="form-group col-half">
+          <label for="user_first_name">
+            <%= fa_icon "user" %>
+            First Name
+          </label>
+          <%= f.text_field :first_name, class: 'form-control', placeholder: 'John', required: true, autofocus: true %>
+        </div>
+
+        <div class="form-group col-half">
+          <label for="user_last_name">
+            <%= fa_icon "user" %>
+            Last Name
+          </label>
+          <%= f.text_field :last_name, class: 'form-control', placeholder: 'Doe', required: true %>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="user_email">
+          <%= fa_icon "envelope" %>
+          Email Address
+        </label>
+        <%= f.text_field :email, class: 'form-control', placeholder: 'john.doe@example.com', required: true, type: 'email' %>
+      </div>
+
+      <div class="form-group">
+        <label for="user_password">
+          <%= fa_icon "lock" %>
+          Password
+        </label>
+        <%= f.password_field :password, class: 'form-control', placeholder: 'Minimum 8 characters', required: true, minlength: 8 %>
+        <small class="form-text">Must be at least 8 characters long</small>
+      </div>
+
+      <div class="form-group">
+        <label for="user_password_confirmation">
+          <%= fa_icon "lock" %>
+          Confirm Password
+        </label>
+        <%= f.password_field :password_confirmation, class: 'form-control', placeholder: 'Re-enter your password', required: true, minlength: 8 %>
+      </div>
+
+      <div class="form-actions">
+        <%= f.submit "Create Account", class: "btn btn-primary btn-block btn-lg" %>
+      </div>
+    <% end %>
+
+    <div class="auth-footer">
+      <p>
+        Already have an account?
+        <%= link_to 'Sign in instead', '/login', class: 'auth-link' %>
+      </p>
+    </div>
+  </div>
 </div>
+
+<style>
+.auth-container {
+  min-height: calc(100vh - 140px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+}
+
+.auth-card {
+  background: white;
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(220, 38, 38, 0.12);
+  max-width: 580px;
+  width: 100%;
+  overflow: hidden;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.auth-header {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  color: white;
+  padding: 48px 40px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  animation: rotate 20s linear infinite;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.auth-icon {
+  width: 80px;
+  height: 80px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  position: relative;
+  z-index: 1;
+}
+
+.auth-icon-image {
+  font-size: 36px;
+  color: white;
+}
+
+.auth-header h1 {
+  margin: 0 0 12px;
+  font-size: 32px;
+  font-weight: 800;
+  color: white;
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.auth-header p {
+  margin: 0;
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.9);
+  position: relative;
+  z-index: 1;
+}
+
+.auth-form {
+  padding: 40px;
+}
+
+.auth-form .form-group {
+  margin-bottom: 24px;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 0;
+}
+
+.col-half {
+  flex: 1;
+}
+
+.auth-form label {
+  display: block;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 10px;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.auth-form label .fa {
+  margin-right: 8px;
+  color: #dc2626;
+}
+
+.auth-form .form-control {
+  width: 100%;
+  padding: 14px 18px;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  background: #fafafa;
+}
+
+.auth-form .form-control:focus {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
+  outline: none;
+  background: white;
+}
+
+.form-text {
+  display: block;
+  margin-top: 8px;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.form-actions {
+  margin-top: 32px;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.btn-lg {
+  padding: 16px 32px;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.auth-footer {
+  padding: 24px 40px 40px;
+  text-align: center;
+  background: #fafafa;
+  border-top: 1px solid #e5e7eb;
+}
+
+.auth-footer p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 15px;
+}
+
+.auth-link {
+  color: #dc2626;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border-bottom: 2px solid transparent;
+}
+
+.auth-link:hover {
+  color: #b91c1c;
+  border-bottom-color: #b91c1c;
+  text-decoration: none;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 576px) {
+  .auth-card {
+    border-radius: 16px;
+  }
+
+  .auth-header {
+    padding: 36px 24px 32px;
+  }
+
+  .auth-header h1 {
+    font-size: 28px;
+  }
+
+  .auth-form {
+    padding: 32px 24px;
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .auth-footer {
+    padding: 20px 24px 32px;
+  }
+}
+</style>

@@ -1,54 +1,285 @@
-<section class="cart-show">
-
+<section class="cart-show-modern">
   <header class="page-header">
-    <h1>My Cart</h1>
+    <h1><%= fa_icon "shopping-cart" %> My Cart</h1>
   </header>
+
   <%= is_cart_empty?.html_safe %>
-<% if !enhanced_cart.empty?%>
-  <div class="panel panel-default items">
-    <table class="table table-bordered">
-      <thead>
-        <tr>
-          <th colspan="2">Product</th>
-          <th>Unit Price</th>
-          <th>Quantity</th>
-          <th>Price</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% enhanced_cart.each do |item| %>
-          <%= render 'item', product: item[:product], quantity: item[:quantity].to_i %>
-        <% end %>
-      </tbody>
-      <tfoot>
-        <tr>
-          <th colspan="4">
-            TOTAL:
-          </th>
-          <th>
-            <%= number_to_currency(cart_subtotal_cents / 100.00) %>
-          </th>
-        </tr>
-      </tfoot>
-    </table>
-  </div>
-  <% end %>
-<% if !enhanced_cart.empty?%>
-  <div class="row">
-    <div class="col-xs-12">
-      <%= form_tag orders_path do %>
-        <script
-          src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-          data-key="<%= Rails.configuration.stripe[:publishable_key] %>"
-          data-amount="<%= cart_subtotal_cents %>"
-          data-name="Jungle"
-          data-description="Khurram Virani's Jungle Order"
-          data-locale="auto"
-          data-email="kvirani@gmail.com"
-          data-currency="cad">
-        </script>
-      <% end %>
+
+  <% if !enhanced_cart.empty? %>
+    <div class="cart-container">
+      <div class="cart-items-section">
+        <h2 class="section-title">
+          <%= fa_icon "list" %> Cart Items
+          <span class="item-count"><%= enhanced_cart.size %> <%= enhanced_cart.size == 1 ? 'item' : 'items' %></span>
+        </h2>
+
+        <div class="cart-items-grid">
+          <% enhanced_cart.each do |item| %>
+            <%= render 'item', product: item[:product], quantity: item[:quantity].to_i %>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="cart-summary-section">
+        <div class="summary-card">
+          <h3 class="summary-title"><%= fa_icon "calculator" %> Order Summary</h3>
+
+          <div class="summary-row">
+            <span>Subtotal:</span>
+            <span class="summary-value"><%= number_to_currency(cart_subtotal_cents / 100.00) %></span>
+          </div>
+
+          <div class="summary-row">
+            <span>Tax (13%):</span>
+            <span class="summary-value"><%= number_to_currency(cart_subtotal_cents / 100.00 * 0.13) %></span>
+          </div>
+
+          <div class="summary-divider"></div>
+
+          <div class="summary-row total-row">
+            <span>Total:</span>
+            <span class="summary-total"><%= number_to_currency((cart_subtotal_cents / 100.00) * 1.13) %></span>
+          </div>
+
+          <div class="checkout-section">
+            <%= form_tag orders_path, class: 'checkout-form' do %>
+              <script
+                src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                data-key="<%= Rails.configuration.stripe[:publishable_key] %>"
+                data-amount="<%= cart_subtotal_cents %>"
+                data-name="Jungle"
+                data-description="Jungle Order"
+                data-locale="auto"
+                data-email="customer@jungle.com"
+                data-currency="cad"
+                data-label="Proceed to Checkout">
+              </script>
+            <% end %>
+
+            <%= link_to root_path, class: 'btn btn-default btn-block' do %>
+              <%= fa_icon "arrow-left" %> Continue Shopping
+            <% end %>
+          </div>
+        </div>
+
+        <div class="secure-checkout-badge">
+          <%= fa_icon "lock" %> Secure Checkout
+        </div>
+      </div>
     </div>
-  </div>
-<% end %>
+  <% end %>
 </section>
+
+<style>
+.cart-show-modern {
+  padding-bottom: 60px;
+}
+
+.cart-container {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 32px;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.cart-items-section {
+  background: white;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.section-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .fa {
+    margin-right: 12px;
+    color: #dc2626;
+  }
+}
+
+.item-count {
+  font-size: 16px;
+  font-weight: 600;
+  background: #fafafa;
+  padding: 6px 14px;
+  border-radius: 20px;
+  color: #6b7280;
+}
+
+.cart-items-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cart-summary-section {
+  position: sticky;
+  top: 90px;
+  align-self: start;
+}
+
+.summary-card {
+  background: white;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  border: 2px solid #dc2626;
+}
+
+.summary-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 24px;
+
+  .fa {
+    margin-right: 10px;
+    color: #dc2626;
+  }
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  font-size: 16px;
+  color: #4b5563;
+}
+
+.summary-value {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.summary-divider {
+  height: 2px;
+  background: linear-gradient(to right, #dc2626, #fee2e2);
+  margin: 16px 0;
+}
+
+.total-row {
+  font-size: 20px;
+  font-weight: 700;
+  padding: 16px 0 0;
+
+  span:first-child {
+    color: #1f2937;
+  }
+}
+
+.summary-total {
+  font-size: 28px;
+  color: #dc2626;
+  font-weight: 900;
+}
+
+.checkout-section {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  .checkout-form {
+    margin-bottom: 0;
+  }
+
+  .stripe-button-el {
+    width: 100% !important;
+    height: auto !important;
+
+    span {
+      width: 100% !important;
+      height: auto !important;
+      padding: 16px !important;
+      font-size: 18px !important;
+      font-weight: 700 !important;
+      background: linear-gradient(135deg, #dc2626, #b91c1c) !important;
+      border-radius: 12px !important;
+      box-shadow: 0 4px 16px rgba(220, 38, 38, 0.3) !important;
+      transition: all 0.3s ease !important;
+    }
+
+    span:hover {
+      background: linear-gradient(135deg, #b91c1c, #991b1b) !important;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4) !important;
+    }
+  }
+
+  .btn-default {
+    background: white;
+    color: #dc2626;
+    border: 2px solid #dc2626;
+    padding: 14px;
+    font-weight: 600;
+    border-radius: 12px;
+
+    &:hover {
+      background: #fafafa;
+      color: #b91c1c;
+      border-color: #b91c1c;
+    }
+  }
+}
+
+.secure-checkout-badge {
+  margin-top: 16px;
+  text-align: center;
+  padding: 12px;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 14px;
+
+  .fa {
+    margin-right: 8px;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 992px) {
+  .cart-container {
+    grid-template-columns: 1fr;
+  }
+
+  .cart-summary-section {
+    position: static;
+  }
+}
+
+@media (max-width: 768px) {
+  .cart-items-section {
+    padding: 20px;
+  }
+
+  .summary-card {
+    padding: 24px;
+  }
+
+  .section-title {
+    font-size: 20px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+}
+</style>
