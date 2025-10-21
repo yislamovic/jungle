@@ -25,6 +25,10 @@ RUN bundle install --without development test
 # Copy application code
 COPY . .
 
+# Copy and set permissions for entrypoint
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 # Create directories that might be needed
 RUN mkdir -p tmp/pids tmp/cache tmp/sockets log public/uploads
 
@@ -43,6 +47,9 @@ USER app
 
 # Expose port
 EXPOSE 3000
+
+# Use entrypoint to handle cleanup
+ENTRYPOINT ["docker-entrypoint.sh"]
 
 # Start command
 CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0", "-p", "3000"]
