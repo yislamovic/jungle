@@ -124,9 +124,21 @@
 .product-detail-modern {
   background: white;
   border-radius: 20px;
-  padding: 40px;
+  padding: 32px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
   animation: fadeInUp 0.6s ease-out;
+  overflow: visible;
+}
+
+.product-detail-modern .container {
+  overflow: visible;
+}
+
+.product-detail-modern .row {
+  overflow: visible;
+}
+
+.product-detail-modern .col-md-6 {
   overflow: visible;
 }
 
@@ -185,7 +197,10 @@
 
 .product-info-panel {
   padding-left: 24px;
+  padding-right: 0;
   overflow: visible;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .product-title {
@@ -300,20 +315,31 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  padding-right: 0;
+  width: 100%;
+  box-sizing: border-box;
+
+  form {
+    width: 100%;
+  }
 
   .btn {
     font-weight: 700;
     border-radius: 12px;
-    padding: 18px;
-    font-size: 18px;
+    padding: 14px 16px;
+    font-size: 16px;
     transition: all 0.3s ease;
     border: none;
-    white-space: nowrap;
+    white-space: normal;
     overflow: visible;
+    width: 100%;
+    box-sizing: border-box;
+    display: inline-block;
+    text-align: center;
 
     .fa {
-      margin-right: 10px;
+      margin-right: 8px;
     }
   }
 
@@ -360,11 +386,12 @@
 
 @media (max-width: 768px) {
   .product-detail-modern {
-    padding: 24px 16px;
+    padding: 20px 12px;
   }
 
   .product-info-panel {
     padding-left: 0;
+    padding-right: 0;
     margin-top: 32px;
   }
 
@@ -381,8 +408,8 @@
   }
 
   .product-actions .btn {
-    font-size: 16px;
-    padding: 14px;
+    font-size: 15px;
+    padding: 12px 10px;
   }
 }
 </style>
