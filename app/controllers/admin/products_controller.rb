@@ -1,8 +1,11 @@
 class Admin::ProductsController < ApplicationController
+  include DemoSession
+
   http_basic_authenticate_with name: ENV["HTTP_BASIC_USER"], password: ENV["HTTP_BASIC_PASSWORD"]
 
   def index
-    @products = Product.order(id: :desc).all
+    # Show session-filtered products
+    @products = session_products.sort_by { |p| p.id.to_i }.reverse
   end
 
   def new
@@ -10,19 +13,19 @@ class Admin::ProductsController < ApplicationController
   end
 
   def create
-    @product = Product.new(product_params)
+    # Create product in session only (demo mode)
+    @product = session_add_product(product_params.to_h)
 
-    if @product.save
-      redirect_to [:admin, :products], notice: 'Product created!'
-    else
-      render :new
-    end
+    redirect_to [:admin, :products], notice: 'Product created! (Demo - will reset on page refresh)'
   end
 
   def destroy
-    @product = Product.find params[:id]
-    @product.destroy
-    redirect_to [:admin, :products], notice: 'Product deleted!'
+    product_id = params[:id].to_i
+
+    # Mark product as deleted in session only (demo mode)
+    session_delete_product(product_id)
+
+    redirect_to [:admin, :products], notice: 'Product deleted! (Demo - will reset on page refresh)'
   end
 
   private
