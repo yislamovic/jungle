@@ -161,7 +161,7 @@ body {
     // Sold out overlay - positioned relative to the article
     > .sold-out {
       position: absolute;
-      top: 140px;
+      top: 110px;
       left: 50%;
       transform: translateX(-50%);
       background: rgba(220, 38, 38, 0.95);
@@ -180,7 +180,7 @@ body {
       position: relative;
       overflow: hidden;
       background: $jungle-gray-lighter;
-      height: 280px;
+      height: 220px;
       border-radius: 16px 16px 0 0;
 
       a {
