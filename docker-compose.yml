@@ -5,7 +5,7 @@ services:
       - "3000:3000"
     environment:
       - RAILS_ENV=production
-      - SECRET_KEY_BASE=dummy_key_for_local_testing_only
+      - SECRET_KEY_BASE=${SECRET_KEY_BASE:-dummy_key_for_local_testing_only}
       - DATABASE_URL=sqlite3:db/production.sqlite3
       - RAILS_SERVE_STATIC_FILES=true
       - RAILS_LOG_TO_STDOUT=true
