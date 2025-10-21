@@ -39,8 +39,8 @@ docker compose logs -f web
 ```
 
 ### 6. Access the site
-- Public site: `http://your-vps-ip:3000`
-- Admin panel: `http://your-vps-ip:3000/admin`
+- Public site: `http://your-vps-ip:3002` or `http://jungle.yahyaislamovic.dev`
+- Admin panel: `http://your-vps-ip:3002/admin` or `http://jungle.yahyaislamovic.dev/admin`
   - Username: `admin`
   - Password: `junglebook`
 
