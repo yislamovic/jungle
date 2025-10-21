@@ -1,7 +1,8 @@
 class Admin::ProductsController < ApplicationController
   include DemoSession
 
-  http_basic_authenticate_with name: ENV["HTTP_BASIC_USER"], password: ENV["HTTP_BASIC_PASSWORD"]
+  # No authentication needed for demo mode - this is a portfolio demo app
+  # http_basic_authenticate_with name: ENV["HTTP_BASIC_USER"], password: ENV["HTTP_BASIC_PASSWORD"]
 
   def index
     # Show session-filtered products
