@@ -1,0 +1,37 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    container_name: jungle-web
+    restart: unless-stopped
+    ports:
+      - "3002:3000"
+    environment:
+      - RAILS_ENV=production
+      - SECRET_KEY_BASE=${SECRET_KEY_BASE}
+      - DATABASE_URL=sqlite3:db/production.sqlite3
+      - RAILS_SERVE_STATIC_FILES=true
+      - RAILS_LOG_TO_STDOUT=true
+      - STRIPE_PUBLISHABLE_KEY=${STRIPE_PUBLISHABLE_KEY}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - HTTP_BASIC_USER=${HTTP_BASIC_USER:-admin}
+      - HTTP_BASIC_PASSWORD=${HTTP_BASIC_PASSWORD:-junglebook}
+    volumes:
+      - jungle_db:/app/db
+      - jungle_uploads:/app/public/uploads
+      - jungle_logs:/app/log
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+volumes:
+  jungle_db:
+    driver: local
+  jungle_uploads:
+    driver: local
+  jungle_logs:
+    driver: local
